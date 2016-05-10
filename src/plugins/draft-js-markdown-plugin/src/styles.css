@@ -1,0 +1,14 @@
+.headerOne {
+  color: #5e93c5;
+}
+
+.headerTwo {
+  color: #5e93c5;
+}
+
+.blockQuote {
+  color: #5e93c5;
+  border-left: 3px solid rgba(0,0,0,.8);
+  padding-left: 20px;
+  margin: 0;
+}

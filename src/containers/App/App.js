@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { loadGroup } from 'redux/modules/word';
+// import RichEditor from '../RichEditor/RichEditor';
+import MarkdownEditor from '../MarkdownEditor/MarkdownEditor';
 
 @connect(
   state => ({
@@ -16,14 +18,14 @@ export default class App extends Component {
     children: PropTypes.object.isRequired
   };
   componentWillMount() {
-    const { loadGroup } = this.props; // eslint-disable-line
-    loadGroup();
+    // const { loadGroup } = this.props; // eslint-disable-line
+    // loadGroup();
   }
   render() {
     return (
       <div>
         <div>
-          HiHi
+          <MarkdownEditor />
         </div>
         <div>
           {this.props.children}
