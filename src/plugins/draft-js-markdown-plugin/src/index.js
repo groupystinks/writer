@@ -3,6 +3,7 @@ import InlineComponent from './InlineComponent';
 import {
   blockQuoteStrategy,
   boldStrategy,
+  boldAutoCompleteStrategy,
   headerOneStrategy,
   headerTwoStrategy,
   headerThreeStrategy,
@@ -16,6 +17,7 @@ const styles = require('./styles.css');
 const defaultTheme = {
   blockQuote: styles.blockQuote,
   bold: styles.bold,
+  boldAutoComplete: styles.boldAutoComplete,
   headerOne: styles.headerOne,
   headerTwo: styles.headerTwo,
   headerThree: styles.headerThree,
@@ -26,6 +28,10 @@ const defaultTheme = {
 
 const createMarkdownPlugin = (config = {}) => {
   const theme = config.theme ? config.theme : defaultTheme;
+  const store = {
+    getEditorState: undefined,
+    setEditorState: undefined,
+  };
   return {
     decorators: [
       {
@@ -58,9 +64,29 @@ const createMarkdownPlugin = (config = {}) => {
       },
       {
         strategy: boldStrategy,
-        component: decorateComponentWithProps(InlineComponent, { theme, type: 'bold' }),
+        component: decorateComponentWithProps(InlineComponent,
+          {
+            store,
+            theme,
+            type: 'bold'
+          }
+        ),
+      },
+      {
+        strategy: boldAutoCompleteStrategy,
+        component: decorateComponentWithProps(InlineComponent,
+          {
+            store,
+            theme,
+            type: 'boldAutoComplete'
+          }
+        ),
       },
     ],
+    initialize: ({ getEditorState, setEditorState }) => {
+      store.getEditorState = getEditorState;
+      store.setEditorState = setEditorState;
+    },
   };
 };
 

@@ -26,6 +26,15 @@
   color: #009900;
 }
 
+.boldAutoComplete {
+  color: #11bb00;
+}
+
+.boldAutoComplete::after {
+  content: "**";
+  color: #aaa;
+}
+
 .blockQuote {
   color: #5e93c5;
   border-left: 3px solid rgba(0,0,0,.8);
