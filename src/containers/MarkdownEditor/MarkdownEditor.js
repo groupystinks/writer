@@ -22,46 +22,52 @@ export default class MarkdownEditor extends Component {
   handleKeyCommand = (command) => {
     const { editorState } = this.state;
     // if not inline component: skip
-    if (command === 'markdown-inline-autocomplete') {
-      // Perform a request to save your contents, set
-      // a new `editorState`, etc.
-      const selection = editorState.getSelection();
-      const anchorOffset = selection.getAnchorOffset();
-      const focusOffset = selection.getFocusOffset();
-      const newEditorState = EditorState.set(editorState, {
-        selection: selection.merge({
-          anchorOffset: anchorOffset + 1,
-          focusOffset: focusOffset + 1,
-        }),
-        forceSelection: true,
-      });
-      this.setState({
-        editorState: newEditorState
-      });
-      return true;
-    } else if (command === 'markdown-inline-autocomplete-cm') {
-      // Perform a request to save your contents, set
-      // a new `editorState`, etc.
-      const selection = editorState.getSelection();
-      const endKey = selection.getEndKey();
-      const content = editorState.getCurrentContent();
-      const textLength = content.getBlockForKey(endKey).getLength();
-      const newEditorState = EditorState.set(editorState, {
-        selection: selection.merge({
-          anchorKey: endKey,
-          anchorOffset: textLength,
-          focusKey: endKey,
-          focusOffset: textLength,
-          isBackward: false,
-        }),
-        forceSelection: true,
-      });
-      this.setState({
-        editorState: newEditorState
-      });
-      return true;
+    switch (command) {
+      case 'markdown-inline-autocomplete': {
+        // Perform a request to save your contents, set
+        // a new `editorState`, etc.
+        const selection = editorState.getSelection();
+        const anchorOffset = selection.getAnchorOffset();
+        const focusOffset = selection.getFocusOffset();
+        const newEditorState = EditorState.set(editorState, {
+          selection: selection.merge({
+            anchorOffset: anchorOffset + 1,
+            focusOffset: focusOffset + 1,
+          }),
+          forceSelection: true,
+        });
+        this.setState({
+          editorState: newEditorState
+        });
+        return true;
+      }
+      case 'markdown-inline-autocomplete-cm': {
+        const selection = editorState.getSelection();
+        const endKey = selection.getEndKey();
+        const content = editorState.getCurrentContent();
+        const textLength = content.getBlockForKey(endKey).getLength();
+        const newEditorState = EditorState.set(editorState, { //eslint-disable-line
+          selection: selection.merge({
+            anchorKey: endKey,
+            anchorOffset: textLength,
+            focusKey: endKey,
+            focusOffset: textLength,
+            isBackward: false,
+          }),
+          forceSelection: true,
+        });
+        this.setState({
+          editorState: newEditorState
+        });
+        return true;
+      }
+      case 'markdown-inline-autocomplete-op':
+        return true;
+      case 'markdown-inline-autocomplete-sh':
+        return true;
+      default:
+        return false;
     }
-    return false;
   }
 
   focus = () => {
