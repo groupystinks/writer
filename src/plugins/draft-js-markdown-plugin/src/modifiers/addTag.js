@@ -17,7 +17,6 @@ const addTag = (editorState, tag) => {
     'insert-tag',
   );
 
-  console.log('getSelectionAfter', autoEndingTagContent.getSelectionAfter());
   return EditorState.forceSelection(newEditorState, autoEndingTagContent.getSelectionAfter());
 };
 
