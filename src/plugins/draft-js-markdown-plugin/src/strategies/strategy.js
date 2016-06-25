@@ -23,11 +23,6 @@ export function boldAutoCompleteStrategy(contentBlock: Object, callback: Functio
 }
 
 export function boldStrategy(contentBlock: Object, callback: Function) {
-  // const boldDecorator = (callback) => {
-  //   contentBlock.set('text', contentBlock.getText() + '**');
-  //   return callback;
-  // };
-  // console.log('contentBlock', contentBlock);
   findWithRegex(BOLD_REGEX, contentBlock, callback);
 }
 

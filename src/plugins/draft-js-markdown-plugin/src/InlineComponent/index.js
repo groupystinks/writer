@@ -7,20 +7,20 @@ export default class InlineComponent extends Component { // eslint-disable-line
   state = {
     isAutoAppended: false
   }
-  onClickHandler = () => {
-    const { decoratedText, store, type } = this.props;
-    if (type === 'boldAutoComplete' &&
-        this.regex.BOLD_AUTO_COMPLETE_REGEX.test(decoratedText)
-      ) {
-      const newEditorState = addTag(
-        store.getEditorState(),
-        '**'
-      );
-
-      store.setEditorState(newEditorState);
-      this.setState({ isAutoAppended: true });
-    }
-  }
+  // onClickHandler = () => {
+  //   const { decoratedText, store, type } = this.props;
+  //   if (type === 'boldAutoComplete' &&
+  //       this.regex.BOLD_AUTO_COMPLETE_REGEX.test(decoratedText)
+  //     ) {
+  //     const newEditorState = addTag(
+  //       store.getEditorState(),
+  //       '**'
+  //     );
+  //
+  //     store.setEditorState(newEditorState);
+  //     this.setState({ isAutoAppended: true });
+  //   }
+  // }
   regex = {
     BOLD_AUTO_COMPLETE_REGEX
   }
@@ -39,7 +39,6 @@ export default class InlineComponent extends Component { // eslint-disable-line
         return (
           <strong
             { ...props }
-            onClick={ this.onClickHandler }
             className={ combinedClassName }
           />
         );
