@@ -35,6 +35,19 @@
   color: #aaa;
 }
 
+.italic {
+  color: #007fff;
+}
+
+.italicAutoComplete {
+  color: #4da5ff;
+}
+
+.italicAutoComplete::after {
+  content: "_";
+  color: #aaa;
+}
+
 .blockQuote {
   color: #5e93c5;
   border-left: 3px solid rgba(0,0,0,.8);

@@ -4,6 +4,8 @@ import {
   blockQuoteStrategy,
   boldStrategy,
   boldAutoCompleteStrategy,
+  italicStrategy,
+  italicAutoCompleteStrategy,
   headerOneStrategy,
   headerTwoStrategy,
   headerThreeStrategy,
@@ -18,6 +20,8 @@ const defaultTheme = {
   blockQuote: styles.blockQuote,
   bold: styles.bold,
   boldAutoComplete: styles.boldAutoComplete,
+  italic: styles.italic,
+  italicAutoComplete: styles.italicAutoComplete,
   headerOne: styles.headerOne,
   headerTwo: styles.headerTwo,
   headerThree: styles.headerThree,
@@ -79,6 +83,26 @@ const createMarkdownPlugin = (config = {}) => {
             store,
             theme,
             type: 'boldAutoComplete'
+          }
+        ),
+      },
+      {
+        strategy: italicStrategy,
+        component: decorateComponentWithProps(InlineComponent,
+          {
+            store,
+            theme,
+            type: 'italic'
+          }
+        ),
+      },
+      {
+        strategy: italicAutoCompleteStrategy,
+        component: decorateComponentWithProps(InlineComponent,
+          {
+            store,
+            theme,
+            type: 'italicAutoComplete'
           }
         ),
       },

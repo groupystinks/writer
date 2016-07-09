@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { EditorState } from 'draft-js';
+import { EditorState, SelectionState } from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createMarkdownPlugin from '../../plugins/draft-js-markdown-plugin/src';
 import keyBinding from '../../plugins/draft-js-markdown-plugin/src/utils/keyBinding';
@@ -49,13 +49,26 @@ export default class MarkdownEditor extends Component {
             editorState: newEditorState
           });
           return true;
-        /* know issue:
-         * auto append could only happen in end of line,
-         * inline auto-pendding is not possible if syntax highlight is stateless
-         * (ex: regex matching)
-         */
-        } else if (protext === '' && pretext.match(/\*\*/g).length % 2 === 1) {
-          const newEditorState = addTag(editorState, '**');
+        } else if (
+          pretext.match(/\*\*/g).length % 2 === 1 &&
+          (protext === '' ||
+          protext.match(/\*\*/g) &&
+          !(protext.match(/\*\*/g).length % 2 === 1))
+        ) {
+          const currentWord = pretext.split('**').slice(-1)[0];
+          const targetRange = new SelectionState({
+            anchorOffset: anchorOffset - currentWord.length - 2,
+            focusOffset: focusOffset + 2,
+            anchorKey: key,
+            focusKey: key
+          });
+          const newEditorState = addTag({
+            blockKey: key,
+            editorState,
+            tag: '**',
+            entityType: 'BOLD',
+            targetRange
+          });
           this.setState({
             editorState: newEditorState
           });
