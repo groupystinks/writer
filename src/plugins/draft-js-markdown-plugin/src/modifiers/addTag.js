@@ -31,7 +31,7 @@ const addTag = ({ blockKey, editorState, tag, entityType, targetRange }) => {
   const newEditorState = EditorState.push(
     editorState,
     appliedEntityContent,
-    'insert-tag',
+    'add-tag-add-entity',
   );
 
   return EditorState.forceSelection(newEditorState, afterTagSelection);

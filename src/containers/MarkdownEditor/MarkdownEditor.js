@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { EditorState, SelectionState } from 'draft-js';
+import { EditorState, Modifier, SelectionState } from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createMarkdownPlugin from '../../plugins/draft-js-markdown-plugin/src';
 import keyBinding from '../../plugins/draft-js-markdown-plugin/src/utils/keyBinding';
@@ -7,6 +7,8 @@ import {
   distanceToMoveForwardToBd
 } from '../../plugins/draft-js-markdown-plugin/src/utils/moveForward';
 import addTag from '../../plugins/draft-js-markdown-plugin/src/modifiers/addTag';
+import addEntity from '../../plugins/draft-js-markdown-plugin/src/modifiers/addEntity';
+
 
 const editorStyles = require('./editorStyles.css');
 const markdownPlugin = createMarkdownPlugin();
@@ -50,6 +52,7 @@ export default class MarkdownEditor extends Component {
           });
           return true;
         } else if (
+          pretext.match(/\*\*/g) &&
           pretext.match(/\*\*/g).length % 2 === 1 &&
           (protext === '' ||
           protext.match(/\*\*/g) &&
@@ -81,6 +84,56 @@ export default class MarkdownEditor extends Component {
           }),
           forceSelection: true,
         });
+        this.setState({
+          editorState: newEditorState
+        });
+        return true;
+      }
+      case 'markdown-inline-autocomplete-sh-asterisk': {
+        const content = editorState.getCurrentContent();
+        const selection = editorState.getSelection();
+        const anchorOffset = selection.getAnchorOffset();
+        const focusOffset = selection.getFocusOffset();
+        const offset = selection.getStartOffset();
+        const key = selection.getStartKey();
+        const pretext = content.getBlockForKey(key).getText().slice(0, offset);
+        const protext = content.getBlockForKey(key).getText().slice(offset);
+        const insertTagContent = Modifier.insertText(
+          content,
+          editorState.getSelection(),
+          '*',
+        );
+        const newEditorState = EditorState.push(
+          editorState,
+          insertTagContent,
+          'add-tag',
+        );
+        if (
+          pretext !== '' &&
+          pretext.match(/\*/g).length !== 1 &&
+          pretext.match(/\*/g).length % 2 === 1 &&
+          (protext === '' ||
+          protext.match(/\*\*/g) &&
+          !(protext.match(/\*\*/g).length % 2 === 2))
+        ) {
+          const currentWord = pretext.split('**').slice(-1)[0];
+          const targetRange = new SelectionState({
+            anchorOffset: anchorOffset - currentWord.length - 2,
+            focusOffset: focusOffset + 1,
+            anchorKey: key,
+            focusKey: key
+          });
+          const newEditorStateAddedEntity = addEntity({
+            blockKey: key,
+            editorState: newEditorState,
+            entityType: 'BOLD',
+            targetRange
+          });
+          this.setState({
+            editorState: newEditorStateAddedEntity
+          });
+          return true;
+        }
         this.setState({
           editorState: newEditorState
         });
