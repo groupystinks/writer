@@ -1,6 +1,6 @@
 import { Modifier, EditorState, Entity, SelectionState } from 'draft-js';
 
-const addTag = ({ blockKey, editorState, tag, entityType, targetRange }) => {
+const addTag = ({ blockKey, editorState, tag, tagOffset, entityType, targetRange }) => {
   /*
    * Need ability to "not continue" a mutable entity
    * waiting pull request https://github.com/facebook/draft-js/pull/510/files.
@@ -22,8 +22,8 @@ const addTag = ({ blockKey, editorState, tag, entityType, targetRange }) => {
 
   // new SelectionState after adding tag. Caret should be at the end of word
   const afterTagSelection = new SelectionState({
-    anchorOffset: focusOffset + 2,
-    focusOffset: focusOffset + 2,
+    anchorOffset: focusOffset + tagOffset,
+    focusOffset: focusOffset + tagOffset,
     anchorKey: blockKey,
     focusKey: blockKey
   });

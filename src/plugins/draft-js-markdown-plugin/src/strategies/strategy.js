@@ -7,8 +7,8 @@ const MARKDOWN_INLINE_REGEX = '[\\w\\s\\!"#\\$%&\\(\\)' +
   '\\+,\\-\\.\\/:;<=>\\?@\\^`\\{\\|\\}~\']*';
 
 // block
-export const HEADER_ONE_REGEX = new RegExp('^#' + COMMON_REGEX, 'gm');
-export const HEADER_TWO_REGEX = new RegExp('^##' + COMMON_REGEX, 'gm');
+export const HEADER_ONE_REGEX = new RegExp(`^#${COMMON_REGEX}`, 'gm');
+export const HEADER_TWO_REGEX = new RegExp(`^##${COMMON_REGEX}`, 'gm');
 export const HEADER_THREE_REGEX = new RegExp('^###' + COMMON_REGEX, 'gm');
 export const HEADER_FOUR_REGEX = new RegExp('^####' + COMMON_REGEX, 'gm');
 export const HEADER_FIVE_REGEX = new RegExp('^#####' + COMMON_REGEX, 'gm');
@@ -42,8 +42,17 @@ export function italicAutoCompleteStrategy(contentBlock: Object, callback: Funct
   findWithRegex(ITALIC_AUTO_COMPLETE_REGEX, contentBlock, callback);
 }
 
-export function italicStrategy(contentBlock: Object, callback: Function) {
-  findWithRegex(ITALIC_REGEX, contentBlock, callback);
+export function italicStrategy(contentBlock, callback) {
+  contentBlock.findEntityRanges(
+    (character) => {
+      const entityKey = character.getEntity();
+      return (
+        entityKey !== null &&
+        Entity.get(entityKey).getType() === 'ITALIC'
+      );
+    },
+    callback
+  );
 }
 
 export function headerOneStrategy(contentBlock: Object, callback: Function) {

@@ -54,9 +54,11 @@ export default class MarkdownEditor extends Component {
         } else if (
           pretext.match(/\*\*/g) &&
           pretext.match(/\*\*/g).length % 2 === 1 &&
+          pretext.match(/\*/g).length % 2 !== 1 &&
           (protext === '' ||
           protext.match(/\*\*/g) &&
-          !(protext.match(/\*\*/g).length % 2 === 1))
+          protext.match(/\*\*/g).length % 2 !== 1 &&
+          protext.match(/\*/g).length % 2 !== 1)
         ) {
           const currentWord = pretext.split('**').slice(-1)[0];
           const targetRange = new SelectionState({
@@ -69,7 +71,34 @@ export default class MarkdownEditor extends Component {
             blockKey: key,
             editorState,
             tag: '**',
+            tagOffset: 2,
             entityType: 'BOLD',
+            targetRange
+          });
+          this.setState({
+            editorState: newEditorState
+          });
+          return true;
+        } else if (
+          pretext.match(/\_/g) &&
+          pretext.match(/\_/g).length % 2 === 1 &&
+          (protext === '' ||
+          protext.match(/\_/g) &&
+          !(protext.match(/\_/g).length % 2 === 1))
+        ) {
+          const currentWord = pretext.split('_').slice(-1)[0];
+          const targetRange = new SelectionState({
+            anchorOffset: anchorOffset - currentWord.length - 1,
+            focusOffset: focusOffset + 1,
+            anchorKey: key,
+            focusKey: key
+          });
+          const newEditorState = addTag({
+            blockKey: key,
+            editorState,
+            tag: '_',
+            tagOffset: 1,
+            entityType: 'ITALIC',
             targetRange
           });
           this.setState({
@@ -110,12 +139,16 @@ export default class MarkdownEditor extends Component {
         );
         if (
           pretext !== '' &&
+          pretext.match(/\*/g) &&
+          pretext.match(/\*\*/g) &&
           pretext.match(/\*/g).length !== 1 &&
+          pretext.match(/\*\*/g).length % 2 === 1 &&
           pretext.match(/\*/g).length % 2 === 1 &&
           (protext === '' ||
           protext.match(/\*\*/g) &&
-          !(protext.match(/\*\*/g).length % 2 === 2))
+          !(protext.match(/\*\*/g).length % 2 === 0))
         ) {
+          console.log('add bold entity');
           const currentWord = pretext.split('**').slice(-1)[0];
           const targetRange = new SelectionState({
             anchorOffset: anchorOffset - currentWord.length - 2,
@@ -127,6 +160,57 @@ export default class MarkdownEditor extends Component {
             blockKey: key,
             editorState: newEditorState,
             entityType: 'BOLD',
+            targetRange
+          });
+          this.setState({
+            editorState: newEditorStateAddedEntity
+          });
+          return true;
+        }
+        this.setState({
+          editorState: newEditorState
+        });
+        return true;
+      }
+      case 'markdown-inline-autocomplete-sh-underscore': {
+        const content = editorState.getCurrentContent();
+        const selection = editorState.getSelection();
+        const anchorOffset = selection.getAnchorOffset();
+        const focusOffset = selection.getFocusOffset();
+        const offset = selection.getStartOffset();
+        const key = selection.getStartKey();
+        const pretext = content.getBlockForKey(key).getText().slice(0, offset);
+        const protext = content.getBlockForKey(key).getText().slice(offset);
+        const insertTagContent = Modifier.insertText(
+          content,
+          editorState.getSelection(),
+          '_',
+        );
+        const newEditorState = EditorState.push(
+          editorState,
+          insertTagContent,
+          'add-tag',
+        );
+        // TODO: if condition will be inproperly triggered.
+        if (
+          pretext.match(/\_/g) &&
+          pretext.match(/\_/g).length % 2 === 1 &&
+          (protext === '' ||
+          protext.match(/\_/g) &&
+          !(protext.match(/\_/g).length % 2 === 1))
+        ) {
+          console.log('add italic entity');
+          const currentWord = pretext.split('_').slice(-1)[0];
+          const targetRange = new SelectionState({
+            anchorOffset: anchorOffset - currentWord.length - 1,
+            focusOffset: focusOffset + 1,
+            anchorKey: key,
+            focusKey: key
+          });
+          const newEditorStateAddedEntity = addEntity({
+            blockKey: key,
+            editorState: newEditorState,
+            entityType: 'ITALIC',
             targetRange
           });
           this.setState({
