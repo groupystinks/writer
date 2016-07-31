@@ -3,7 +3,8 @@ import findWithRegex from 'find-with-regex';
 
 const COMMON_REGEX = '[\\w\\s\\u2000-\\u206F\\u2E00-\\u2E7F\\u4E00-\\u9FFF\\!"#\\$%&\\(\\)' +
   '\\*\\+,\\-\\.\\/:;<=>\\?@\\[\\]\\^_`\\{\\|\\}~\']*';
-const MARKDOWN_INLINE_REGEX = '[\\w\\s\\!"#\\$%&\\(\\)' +
+// '*', '_' is excluded
+const MARKDOWN_INLINE_REGEX = '[A-Za-z0-9\\s\\!"#\\$%&\\(\\)' +
   '\\+,\\-\\.\\/:;<=>\\?@\\^`\\{\\|\\}~\']*';
 
 // block
