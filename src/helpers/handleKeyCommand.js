@@ -1,9 +1,9 @@
 import { EditorState, Modifier, SelectionState } from 'draft-js';
-import addTag from 'plugins/draft-js-markdown-plugin/src/modifiers/addTag';
-import addEntity from 'plugins/draft-js-markdown-plugin/src/modifiers/addEntity';
+import addTag from '../plugins/draft-js-markdown-plugin/src/modifiers/addTag';
+import addEntity from '../plugins/draft-js-markdown-plugin/src/modifiers/addEntity';
 import {
   distanceToMoveForwardToBd
-} from 'plugins/draft-js-markdown-plugin/src/utils/moveForward';
+} from '../plugins/draft-js-markdown-plugin/src/utils/moveForward';
 
 function handleKeyCommand({ command, editorState }) {
   const MarkdownEditor = this;

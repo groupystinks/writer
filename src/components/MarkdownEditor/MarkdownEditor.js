@@ -3,7 +3,7 @@ import { EditorState } from 'draft-js';
 import Editor from 'draft-js-plugins-editor';
 import createMarkdownPlugin from '../../plugins/draft-js-markdown-plugin/src';
 import keyBinding from '../../plugins/draft-js-markdown-plugin/src/utils/keyBinding';
-import handleKeyCommandHelpers from 'helpers/handleKeyCommand';
+import handleKeyCommandHelpers from '../../helpers/handleKeyCommand';
 
 const editorStyles = require('./editorStyles.css');
 const markdownPlugin = createMarkdownPlugin();
@@ -30,7 +30,7 @@ export default class MarkdownEditor extends Component {
 
   render() {
     return (
-      <div className={ editorStyles.editor } onClick={ this.focus }>
+      <div className="editor-container" onClick={ this.focus }>
         <Editor
           editorState={ this.state.editorState }
           onChange={ this.onChange }
